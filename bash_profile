@@ -10,3 +10,9 @@ export PS1
 export HISTFILESIZE=
 export HISTSIZE=
 
+if [ -n "$SSH_CLIENT" ]
+then
+    set $SSH_CLIENT
+    echo "You are coming in from $1 port $2"
+fi
+
