@@ -2,6 +2,21 @@ set number
 set shiftwidth=2
 set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
 set ignorecase
+set clipboard=unnamed
+set foldmethod=indent
+set switchbuf=vsplit
+"unfold all whenever a buffer is read
+au BufRead * normal zR
+set wildignore=*/node_modules/*
+
+" more efficient window movement
+noremap <C-h> <C-w>h
+noremap <C-j> <C-w>j
+noremap <C-k> <C-w>k
+noremap <C-l> <C-w>l
+
+cnoremap <C-A> <Home>
+
 filetype plugin on
 
 " Specify a directory for plugins
@@ -22,14 +37,13 @@ Plug 'morhetz/gruvbox'
 call plug#end()
 
 vmap ++ <plug>NERDCommenterToggle
-nmap ++ <plug>NERDCommenterToggle
+map ++ <plug>NERDCommenterToggle
 
 colorscheme gruvbox
 
 let g:NERDTreeGitStatusWithFlags = 1
-
-let g:NERDTreeIgnore = ['^node_modules$']
-
+let g:NERDTreeShowHidden = 1
+let g:NERDTreeIgnore = ['^node_modules$', '\.git$']
 " sync open file with NERDTree
 " " Check if NERDTree is open or active
 "function! IsNERDTreeOpen()        
@@ -50,7 +64,7 @@ let g:NERDTreeIgnore = ['^node_modules$']
 
 " ctrlp
 let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
-
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 " coc config
 let g:coc_global_extensions = [
   "\ 'coc-snippets',
@@ -94,6 +108,8 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gv :vsp<CR><Plug>(coc-definition)
+nmap <silent> gs :sp<CR><Plug>(coc-definition)
 
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
