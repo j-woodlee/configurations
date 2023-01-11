@@ -2,12 +2,15 @@ set number
 set shiftwidth=2
 set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
 set ignorecase
+set smartcase
 set clipboard=unnamed
 set foldmethod=indent
 set switchbuf=vsplit
+set re=0
 "unfold all whenever a buffer is read
 au BufRead * normal zR
-set wildignore=*/node_modules/*
+
+set wildignore+=*/node_modules/*
 
 " more efficient window movement
 noremap <C-h> <C-w>h
@@ -32,18 +35,25 @@ Plug 'scrooloose/nerdcommenter'
 "Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
 Plug 'morhetz/gruvbox'
-"Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
+Plug 'navarasu/onedark.nvim'
+Plug 'vieira/vim-javascript'
+Plug 'APZelos/blamer.nvim'
 " Initialize plugin system
 call plug#end()
 
 vmap ++ <plug>NERDCommenterToggle
 map ++ <plug>NERDCommenterToggle
 
-colorscheme gruvbox
+let g:onedark_config = {
+    \ 'style': 'darker',
+\}
+colorscheme onedark
+let g:blamer_enabled = 1
 
 let g:NERDTreeGitStatusWithFlags = 1
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeIgnore = ['^node_modules$', '\.git$']
+nmap <C-n> :NERDTreeToggle<CR>
 " sync open file with NERDTree
 " " Check if NERDTree is open or active
 "function! IsNERDTreeOpen()        
@@ -65,6 +75,10 @@ let g:NERDTreeIgnore = ['^node_modules$', '\.git$']
 " ctrlp
 let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlPLastMode'
+let g:ctrlp_extensions = ['line']
+
 " coc config
 let g:coc_global_extensions = [
   "\ 'coc-snippets',
