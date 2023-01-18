@@ -53,24 +53,33 @@ let g:blamer_enabled = 1
 let g:NERDTreeGitStatusWithFlags = 1
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeIgnore = ['^node_modules$', '\.git$']
-nmap <C-n> :NERDTreeToggle<CR>
-" sync open file with NERDTree
-" " Check if NERDTree is open or active
-"function! IsNERDTreeOpen()        
-"  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
-"endfunction
+
+" Check if NERDTree is open or active
+function! IsNERDTreeOpen()
+  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+endfunction
 
 " Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
 " file, and we're not in vimdiff
-"function! SyncTree()
-"  if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
-"    NERDTreeFind
-"    wincmd p
-"  endif
-"endfunction
+function! SyncTree()
+  if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
+    NERDTreeFind
+    wincmd p
+  endif
+endfunction
 
 " Highlight currently open buffer in NERDTree
-"autocmd BufRead * call SyncTree()
+autocmd BufEnter * call SyncTree()
+
+function! ToggleNerdTree()
+  set eventignore=BufEnter
+  NERDTreeToggle
+  set eventignore=
+endfunction
+nmap <C-n> :call ToggleNerdTree()<CR>
+
+
+
 
 " ctrlp
 let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
@@ -95,6 +104,12 @@ set updatetime=300
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
@@ -115,7 +130,6 @@ inoremap <silent><expr> <c-space> coc#refresh()
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " Or use `complete_info` if your vim support it, like:
 " inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-"
 "
 " " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
